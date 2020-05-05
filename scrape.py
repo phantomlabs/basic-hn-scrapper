@@ -6,6 +6,18 @@ soup = BeautifulSoup(res.text, 'html.parser')
 links = soup.select('.storylink')
 subtext = soup.select('.subtext')
 
+all_links = []
+all_subtext = []
+
+for i in range(1, 4):
+    url = 'https://news.ycombinator.com/?p=' + str(i)
+    res = requests.get(url)
+    soup = BeautifulSoup(res.text, 'html.parser')
+    links = soup.select('.storylink')
+    subtext = soup.select('.subtext')
+    all_links += links
+    all_subtext += subtext
+
 
 def sort_by_votes(stories):
     return sorted(stories, key=lambda k: k['votes'], reverse=True)
@@ -29,4 +41,6 @@ def top_hn(links, subtext):
     return sort_by_votes(news)
 
 
-print(top_hn(links, subtext))
+total_news = top_hn(all_links, all_subtext)
+print(total_news)
+print('Total news =', len(total_news))
